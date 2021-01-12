@@ -1,28 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-class Todoitem extends Component {
-    getStyle = () => {
+function Todoitem(props) {
+
+    const { id, title, isCompleted } = props.todo
+
+    const toggleComplete = (e) => {
+        props.toggleComplete(id)
+    }
+
+    const deleteTodo = (e) => {
+        props.deleteTodo(id)
+    }
+
+    const getStyle = () => {
         return {
-            textDecoration: this.props.todo.isCompleted ? 'line-through' : 'none'
+            textDecoration: isCompleted ? 'line-through' : 'none'
         }
     }
 
-    render() {
-        const { id, title } = this.props.todo
-        return (
-            <div style={style.item}>
-                <input type='checkbox' onChange={this.props.toggleComplete.bind(this, id)} />
+    return (
+        <div style={style.item}>
+            <input type='checkbox' onChange={toggleComplete} />
                 &nbsp;
-                <span style={this.getStyle()}>
-                    {title}
-                </span>
-                <button style={style.btn} onClick={this.props.delete.bind(this, id)}>
-                    X
-                </button>
-            </div >
-        )
-    }
+            <span style={getStyle()}>
+                {title}
+            </span>
+            <button style={style.btn} onClick={deleteTodo}>
+                X
+            </button>
+        </div >
+    )
 }
 
 const style = {
@@ -46,7 +54,7 @@ const style = {
 Todoitem.propTypes = {
     todo: PropTypes.object.isRequired,
     toggleComplete: PropTypes.func.isRequired,
-    delete: PropTypes.func.isRequired,
+    deleteTodo: PropTypes.func.isRequired,
 }
 
 export default Todoitem;

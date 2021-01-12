@@ -1,34 +1,28 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types'
 
-class Additem extends Component {
+function Additem(props) {
 
-    state = {
-        title: ''
-    }
+    const [values, setValues] = useState({ title: '' });
 
-    onChange = (e) => {
-        this.setState({
+    const onChange = (e) => {
+        setValues({
+            ...values,
             [e.target.name]: e.target.value
         })
     }
 
-    onSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-        this.props.add(this.state.title);
-        this.setState({
-            title: ''
-        })
+        props.addTodo(values.title);
     }
 
-    render() {
-        return (
-            <form style={style.form} onSubmit={this.onSubmit}>
-                <input type='text' name='title' placeholder='Add item...' style={style.input} onChange={this.onChange} value={this.state.title} />
-                <button type='submit' style={style.btn}>Submit</button>
-            </form>
-        )
-    }
+    return (
+        <form style={style.form} onSubmit={onSubmit}>
+            <input type='text' name='title' placeholder='Add item...' style={style.input} onChange={onChange} value={values.title} />
+            <button type='submit' style={style.btn}>Submit</button>
+        </form>
+    )
 }
 
 const style = {
@@ -47,7 +41,7 @@ const style = {
 
 // PropTypes : declare type for props, eg string, number, array, object, func ; isRequired means must be used in above code
 Additem.propTypes = {
-    add : PropTypes.func.isRequired
+    addTodo: PropTypes.func.isRequired
 }
 
 export default Additem;

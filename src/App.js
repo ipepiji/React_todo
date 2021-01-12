@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Todos from './components/Todos'
 import './App.css';
 import Header from './components/layouts/Header';
@@ -7,10 +7,11 @@ import Additem from './components/Additem';
 import { v1 as uuid } from 'uuid';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-class App extends Component {
+function App() {
 
-  state = {
-    todos: [
+  const [notCompleted, setNotCompleted] = useState(0);
+  const [todos, setTodos] = useState(
+    [
       {
         id: uuid(),
         title: "Take out the trash",
@@ -27,66 +28,62 @@ class App extends Component {
         isCompleted: false
       }
     ]
-  }
+  )
 
-  add = (title) => {
+  useEffect(() => {
+    setNotCompleted((todos.filter((todo) => !todo.isCompleted)).length)
+  }, [todos])
+
+  const addTodo = (title) => {
     const newItem = {
       id: uuid(),
       title: title,
       isCompleted: false
     }
 
-    this.setState({
-      todos: [...this.state.todos, newItem]
-    })
+    setTodos([
+      ...todos,
+      newItem
+    ])
   }
 
-  toggleComplete = (id) => {
-    this.setState({
-      todos: this.state.todos.map((todo) => {
+  const toggleComplete = (id) => {
+    setTodos(
+      todos.map((todo) => {
         if (todo.id === id)
           todo.isCompleted = !todo.isCompleted
 
         return todo;
-      })
-    })
+      }))
   }
 
-  delete = (id) => {
-    this.setState({
-      todos: [...this.state.todos.filter((todo) =>  // ...this.state.todos = get array data (Spread operator)
+  const deleteTodo = (id) => {
+    setTodos(
+      [...todos.filter((todo) =>  // ...this.state.todos = Copy array (Spread operator)
         todo.id !== id
-      )]
-    })
+      )])
   }
 
-  render() {
-
-    const notCompleted = (this.state.todos.filter((todo) =>
-      !todo.isCompleted
-    )).length
-
-    return (
-      <div className="App">
-        <div className="container">
-          <Router>
-            <Header />
-            <Route exact path="/" render={(props) => (
-              <React.Fragment>
-                <Additem add={this.add} />
-                <Todos todos={this.state.todos} toggleComplete={this.toggleComplete} delete={this.delete} />
-                <div>
-                  <br />
-                  {notCompleted}/{this.state.todos.length} items left
+  return (
+    <div className="App">
+      <div className="container">
+        <Router>
+          <Header />
+          <Route exact path="/" render={() => (
+            <React.Fragment>
+              <Additem addTodo={addTodo} />
+              <Todos todos={todos} toggleComplete={toggleComplete} deleteTodo={deleteTodo} />
+              <div>
+                <br />
+                {notCompleted}/{todos.length} items left
                 </div>
-              </React.Fragment>
-            )} />
-            <Route path='/aboutus' component={Aboutus} />
-          </Router>
-        </div>
+            </React.Fragment>
+          )} />
+          <Route path='/aboutus' component={Aboutus} />
+        </Router>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default App;

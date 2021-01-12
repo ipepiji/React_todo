@@ -14,7 +14,10 @@ function Additem(props) {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        props.addTodo(values.title);
+        if (values.title)
+            props.addTodo(values.title);
+        else
+            alert("Please fill in the item")
     }
 
     return (

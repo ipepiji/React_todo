@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 function Todoitem(props) {
 
-    const { id, title, isCompleted } = props.todo
+    const { id, title, dateCreated, isCompleted } = props.todo
 
     const toggleComplete = (e) => {
         props.toggleComplete(id)
@@ -19,16 +19,23 @@ function Todoitem(props) {
         }
     }
 
+    const formattedDate = new Date(dateCreated * 1000).toLocaleDateString('en-GB')
+
     return (
         <div style={style.item}>
-            <input type='checkbox' onChange={toggleComplete} />
-                &nbsp;
+            <input type='checkbox' onChange={toggleComplete} checked={isCompleted} />
+            &nbsp;
             <span style={getStyle()}>
                 {title}
             </span>
-            <button style={style.btn} onClick={deleteTodo}>
-                X
-            </button>
+            &nbsp;
+            <span style={{ float: 'right' }}>
+                <b>{formattedDate}</b>
+                &nbsp;&nbsp;
+                <button style={style.btn} onClick={deleteTodo}>
+                    X
+                </button>
+            </span>
         </div >
     )
 }

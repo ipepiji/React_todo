@@ -61,6 +61,11 @@ class App extends Component {
   }
 
   render() {
+
+    const notCompleted = (this.state.todos.filter((todo) =>
+      !todo.isCompleted
+    )).length
+
     return (
       <div className="App">
         <div className="container">
@@ -70,6 +75,10 @@ class App extends Component {
               <React.Fragment>
                 <Additem add={this.add} />
                 <Todos todos={this.state.todos} toggleComplete={this.toggleComplete} delete={this.delete} />
+                <div>
+                  <br />
+                  {notCompleted}/{this.state.todos.length} items left
+                </div>
               </React.Fragment>
             )} />
             <Route path='/aboutus' component={Aboutus} />

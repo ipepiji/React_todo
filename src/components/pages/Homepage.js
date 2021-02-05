@@ -78,21 +78,20 @@ function Homepage() {
     }
 
     const sortDate = (param) => {
-        let tmpTodos;
-        param === "toggle" ? tmpTodos = todos : tmpTodos = param
+        let tmpTodos = todos,
+            tmpDateState = dateState;
+
+        if (param !== "toggle") {
+            tmpTodos = param;
+            tmpDateState === "up" ? tmpDateState = "down" : tmpDateState = "up";
+        }
+
         setTodos(
             tmpTodos.sort((a, b) => {
-                if (param === "toggle") {
-                    if (dateState === "up")
-                        return a.dateCreated - b.dateCreated
-                    else
-                        return b.dateCreated - a.dateCreated
-                } else {
-                    if (dateState === "down")
-                        return a.dateCreated - b.dateCreated
-                    else
-                        return b.dateCreated - a.dateCreated
-                }
+                if (tmpDateState === "up")
+                    return a.dateCreated - b.dateCreated
+                else
+                    return b.dateCreated - a.dateCreated
             })
         )
 

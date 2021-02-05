@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Todos from '../functions/Todos'
-import Additem from '../functions/Additem';
+import Todos from '../Todos'
+import Additem from '../Additem';
 import { v1 as uuid } from 'uuid';
 
 function Homepage() {

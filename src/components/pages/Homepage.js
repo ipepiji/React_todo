@@ -35,7 +35,7 @@ function Homepage() {
     const [dateState, setDateState] = useState("up");
 
     useEffect(() => {
-        sortDate(); // eslint-disable-next-line
+        sortDate("toggle"); // eslint-disable-next-line
     }, [])
 
     const addTodo = (title) => {
@@ -52,15 +52,7 @@ function Homepage() {
                 newItem
             ];
 
-            setTodos(
-                newArr.sort((a, b) => {
-                    if (dateState === "up")
-                        return b.dateCreated - a.dateCreated
-                    else
-                        return a.dateCreated - b.dateCreated
-
-                })
-            )
+            sortDate(newArr);
         }
         else
             alert("Task already exist!")
@@ -85,17 +77,27 @@ function Homepage() {
         )
     }
 
-    const sortDate = () => {
+    const sortDate = (param) => {
+        let tmpTodos;
+        param === "toggle" ? tmpTodos = todos : tmpTodos = param
         setTodos(
-            todos.sort((a, b) => {
-                if (dateState === "up")
-                    return a.dateCreated - b.dateCreated
-                else
-                    return b.dateCreated - a.dateCreated
+            tmpTodos.sort((a, b) => {
+                if (param === "toggle") {
+                    if (dateState === "up")
+                        return a.dateCreated - b.dateCreated
+                    else
+                        return b.dateCreated - a.dateCreated
+                } else {
+                    if (dateState === "down")
+                        return a.dateCreated - b.dateCreated
+                    else
+                        return b.dateCreated - a.dateCreated
+                }
             })
         )
 
-        setDateState(dateState === "up" ? "down" : "up")
+        if (param === "toggle")
+            setDateState(dateState === "up" ? "down" : "up")
     }
 
     const notCompleted = todos.filter((todo) => !todo.isCompleted).length
@@ -109,7 +111,7 @@ function Homepage() {
                 {notCompleted}/{todos.length} items left
               </span>
             <span style={{ float: 'right' }}>
-                <button style={{ width: '130px', height: '30px', cursor: 'pointer' }} onClick={sortDate}>Sort Date {dateState === "up" ? "↑" : "↓"}</button>
+                <button style={{ width: '130px', height: '30px', cursor: 'pointer' }} onClick={() => sortDate("toggle")}>Sort Date {dateState === "up" ? "↑" : "↓"}</button>
             </span>
         </div>
     );

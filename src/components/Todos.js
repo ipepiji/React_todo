@@ -1,21 +1,69 @@
-import React from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
+
 import Todoitem from './Todoitem';
-import PropTypes from 'prop-types';
 
 function Todos(props) {
 
-    return (
-        props.todos.map((todo) => {
-            return <Todoitem key={todo.id} todo={todo} toggleComplete={props.toggleComplete} deleteTodo={props.deleteTodo} />
+    const [todos, setTodos] = useState([]);
+    const [dateState, setDateState] = useState('inc');
+    const isFirstRun = useRef(true);
+
+    const sortByDate = (arr) => {
+        return arr.sort((a, b) => {
+            if (dateState === 'inc')
+                return a.dateCreated - b.dateCreated;
+            else
+                return b.dateCreated - a.dateCreated;
         })
+    }
+
+    useEffect(() => {
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+            return;
+        }
+        setTodos(sortByDate([...props.todos]));  // eslint-disable-next-line
+    }, [])
+
+    useEffect(() => {
+        if (!isFirstRun.current)
+            setTodos(sortByDate([...props.todos]));  // eslint-disable-next-line
+    }, [props.todos])
+
+    const toggleDate = () => {
+        dateState === 'inc' ? setDateState('dec') : setDateState('inc');
+
+        setTodos(
+            [...todos].reverse()
+        )
+    }
+
+    const notCompleted = props.todos.filter((todo) => !todo.isCompleted).length;
+
+    return (
+        <div>
+            {
+                todos
+                    .map((todo) => {
+                        return <Todoitem key={todo.id} todo={todo} />
+                    })
+            }
+            < br />
+            <span style={{ float: 'left' }}>
+                {notCompleted}/{props.todos.length} items left
+              </span>
+            <span style={{ float: 'right' }}>
+                <button style={{ width: '130px', height: '30px', cursor: 'pointer' }} onClick={toggleDate}>Sort Date</button>
+            </span>
+        </div>
     )
 }
 
-// PropTypes : declare type for props, eg string, number, array, object, func ; isRequired means must be used in above code
-Todos.propTypes = {
-    todos: PropTypes.array.isRequired,
-    toggleComplete: PropTypes.func.isRequired,
-    deleteTodo: PropTypes.func.isRequired,
-}
+const mapStateToProps = (state) => ({
+    todos: state.todos
+});
 
-export default Todos;
+export default connect(
+    mapStateToProps
+)(Todos);

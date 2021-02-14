@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types'
+import { useState } from 'react';
+
+import { connect } from 'react-redux';
+import { addTodo } from '../actions';
 
 function Additem(props) {
 
@@ -11,13 +13,13 @@ function Additem(props) {
             [e.target.name]: e.target.value
         })
     }
-
     const onSubmit = (e) => {
         e.preventDefault();
         if (values.title)
-            props.addTodo(values.title);
+            props.addTodo({ title: values.title });
         else
-            alert("Please fill in the item")
+            alert("Please fill in the item");
+        setValues({ ...values, title: '' });
     }
 
     return (
@@ -42,9 +44,7 @@ const style = {
     }
 }
 
-// PropTypes : declare type for props, eg string, number, array, object, func ; isRequired means must be used in above code
-Additem.propTypes = {
-    addTodo: PropTypes.func.isRequired
-}
-
-export default Additem;
+export default connect(
+    null,
+    { addTodo }
+)(Additem);

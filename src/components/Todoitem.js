@@ -1,16 +1,18 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+
+import { connect } from 'react-redux';
+import { deleteTodo, toggleComplete } from '../actions';
 
 function Todoitem(props) {
 
     const { id, title, dateCreated, isCompleted } = props.todo
 
-    const toggleComplete = (e) => {
-        props.toggleComplete(id)
+    const deleteTodo = (e) => {
+        props.deleteTodo({ id })
     }
 
-    const deleteTodo = (e) => {
-        props.deleteTodo(id)
+    const toggleComplete = (e) => {
+        props.toggleComplete({ id })
     }
 
     const getStyle = () => {
@@ -60,8 +62,9 @@ const style = {
 // PropTypes : declare type for props, eg string, number, array, object, func ; isRequired means must be used in above code
 Todoitem.propTypes = {
     todo: PropTypes.object.isRequired,
-    toggleComplete: PropTypes.func.isRequired,
-    deleteTodo: PropTypes.func.isRequired,
 }
 
-export default Todoitem;
+export default connect(
+    null,
+    { deleteTodo, toggleComplete }
+)(Todoitem);

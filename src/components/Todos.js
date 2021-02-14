@@ -33,7 +33,6 @@ function Todos(props) {
 
     const toggleDate = () => {
         dateState === 'inc' ? setDateState('dec') : setDateState('inc');
-
         setTodos(
             [...todos].reverse()
         )
